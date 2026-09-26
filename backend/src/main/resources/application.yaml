@@ -1,3 +1,51 @@
 spring:
+  config:
+      import: optional:file:.env[.properties]
   application:
     name: booking-ticketing
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/${DATABASE_NAME}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+  threads:
+    virtual:
+      enabled: true
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate # Options: validate | update | none (Use Flyway/Liquibase for production)
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: always
+jwt:
+  secret: ${JWT_SECRET}
+  access_token:
+    expiration: 900000
+  refresh_token:
+    expiration: 604800000
+
+vault:
+  encryption:
+      key: ${ENCRYPTION_KEY} #AES-256 (32-byte Base64 key)
+
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password: ${KEYSTORE_PASSWORD}
+    key-alias: ${KEYSTORE_ALIAS}
+  error:
+    include-message: ${MESSAGE_MODE}
+
+logging:
+  level:
+    org:
+      springframework:
+        security: ${LOGGING_MODE}
+        security.web.authentication.AnonymousAuthenticationFilter: ${AUTH_MODE}

@@ -48,5 +48,13 @@
 ## 7. User
 - id (BIGINT)
 - username (VARCHAR - 30)
+- email (VARCHAR 75)
 - password (TEXT Hashed & Salted)
-- refresh_token (UUID - Hashed & Salted)
+- password_salt (TEXT)
+
+## 8. Refresh Token
+- id (BIGINT)
+- token_hash (VARCHAR 64)
+- user_id (BIGINT - ForeignKey)
+- expires_at (Date)
+- revoked (Boolean)
