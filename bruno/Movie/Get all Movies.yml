@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: https://localhost:8443/api/v1/movies?minDuration=150&keywords=NASA
+  url: https://localhost:8443/api/v1/movies
   params:
     - name: maxDuration
       value: "151"
@@ -14,6 +14,7 @@ http:
     - name: minDuration
       value: "150"
       type: query
+      disabled: true
     - name: releasedAfter
       value: 2010-09-16
       type: query
@@ -25,6 +26,7 @@ http:
     - name: keywords
       value: NASA
       type: query
+      disabled: true
   auth: inherit
 
 settings:

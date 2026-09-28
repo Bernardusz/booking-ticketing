@@ -47,6 +47,9 @@ class SecurityConfig(
                 .requestMatchers(
                     HttpMethod.GET, "/api/v1/movies/**"
                 ).permitAll()
+                .requestMatchers(
+                    "/api/v1/auditoriums/**"
+                ).hasRole("ADMIN")
                 .anyRequest().authenticated()
             }
             .authenticationProvider(authenticationProvider())

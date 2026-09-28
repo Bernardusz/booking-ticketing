@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS movies(
 
 CREATE TABLE IF NOT EXISTS auditoriums(
     id BIGSERIAL PRIMARY KEY,
+    code VARCHAR(20) NOT NULL UNIQUE, -- e.g., 'AUD-1A', 'IMAX-01'
+    name VARCHAR(50) NOT NULL,        -- e.g., 'Auditorium 1A (Dolby Atmos)'
     total_seats INT NOT NULL
 );
 

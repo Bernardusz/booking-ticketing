@@ -8,10 +8,10 @@ import io.github.bernardusz.booking_ticketing.movies.dto.toSummary
 import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.existed.MovieAlreadyExistException
 import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.missing.MovieNotFoundException
 import io.github.bernardusz.booking_ticketing.shared.util.PosterUrlGenerator
-import org.springframework.beans.factory.BeanRegistry
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 @Service
@@ -20,6 +20,7 @@ class MovieService(
     private val posterUrlGenerator: PosterUrlGenerator
 ) {
     // CREATE
+    @Transactional
     fun createMovie(movie: MovieSaveRequest): Long {
         if (movieRepository.existsByTitle(movie.title)){
             throw MovieAlreadyExistException("Movie with title ${movie.title} already exists")
@@ -39,12 +40,14 @@ class MovieService(
     }
 
     // GET: List
+    @Transactional(readOnly = true)
     fun getMovies(): List<MovieSummary> {
         return movieRepository.findAll().map {
             it.toSummary()
         }
     }
 
+    @Transactional(readOnly = true)
     fun filterMovies(
         maxDuration: Int? = null,
         minDuration: Int? = null,
@@ -67,6 +70,7 @@ class MovieService(
     }
 
     // GET: Singular
+    @Transactional(readOnly = true)
     fun findById(id: Long): MovieDetails{
         return movieRepository.findById(
             id
@@ -77,6 +81,7 @@ class MovieService(
         }.toDetails()
     }
 
+    @Transactional(readOnly = true)
     fun findByTitle(title: String): MovieDetails {
         return movieRepository.findByTitle(title)
             .orElseThrow {
@@ -87,6 +92,7 @@ class MovieService(
     }
 
     // PUT: Update
+    @Transactional
     fun updateMovie(id: Long, movieSaveRequest: MovieSaveRequest): MovieDetails{
         val movie: Movie = movieRepository.findById(id)
             .orElseThrow {
@@ -101,9 +107,10 @@ class MovieService(
         movie.durationMinutes = movieSaveRequest.durationMinutes
         movie.posterUrl = posterUrlGenerator.generateRandomPosterUrl()
 
-        return movieRepository.save(movie).toDetails()
+        return movie.toDetails()
     }
 
+    @Transactional
     fun deleteById(id: Long){
         if (!movieRepository.existsById(id)) {
             throw MovieNotFoundException("User not found with id: $id")

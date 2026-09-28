@@ -1,0 +1,21 @@
+info:
+  name: Delete an Auditorium by ID
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: https://localhost:8443/api/v1/auditoriums/:auditoriumId
+  params:
+    - name: auditoriumId
+      value: "2"
+      type: path
+      description: The id of the auditourium to be deleted
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

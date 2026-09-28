@@ -1,0 +1,29 @@
+info:
+  name: Update an Auditorium by ID
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: https://localhost:8443/api/v1/auditoriums/:auditoriumId
+  params:
+    - name: auditoriumId
+      value: "2"
+      type: path
+      description: The ID of the auditorium in which you want to edit
+  body:
+    type: json
+    data: |-
+      {
+        "code": "AAA1",
+        "name": "Cinema AAA1",
+        "totalSeats": 85
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
