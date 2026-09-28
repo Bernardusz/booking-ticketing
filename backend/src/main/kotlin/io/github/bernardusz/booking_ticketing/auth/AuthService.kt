@@ -2,11 +2,11 @@ package io.github.bernardusz.booking_ticketing.auth
 
 import io.github.bernardusz.booking_ticketing.auth.dto.LoginRequest
 import io.github.bernardusz.booking_ticketing.auth.dto.LoginResponse
+import io.github.bernardusz.booking_ticketing.auth.dto.RegisterRequest
 import io.github.bernardusz.booking_ticketing.auth.service.JwtService
 import io.github.bernardusz.booking_ticketing.auth.service.RefreshTokenService
 import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.InternalServerException
 import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.UserAlreadyExistsException
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.UserNotFoundException
 import io.github.bernardusz.booking_ticketing.user.User
 import io.github.bernardusz.booking_ticketing.user.dto.UserCreation
 import io.github.bernardusz.booking_ticketing.user.dto.UserSecurity
@@ -28,25 +28,26 @@ class AuthService (
     private val refreshTokenService: RefreshTokenService
 ) {
     @Transactional
-    fun registerUser(userCreation: UserCreation): Long {
-        if (userRepository.existsByUsername(userCreation.username)) {
-            throw UserAlreadyExistsException("Username '${userCreation.username}' is already taken.")
+    fun registerUser(registerRequest: RegisterRequest): Long {
+        if (userRepository.existsByUsername(registerRequest.username)) {
+            throw UserAlreadyExistsException("Username '${registerRequest.username}' is already taken.")
         }
-        if (userRepository.existsByEmail(userCreation.email)) {
-            throw UserAlreadyExistsException("Email '${userCreation.email}' is already registered.")
+        if (userRepository.existsByEmail(registerRequest.email)) {
+            throw UserAlreadyExistsException("Email '${registerRequest.email}' is already registered.")
         }
 
-        val hashedPassword = passwordEncoder.encode(userCreation.password)
+        val hashedPassword = passwordEncoder.encode(registerRequest.password)
             ?: throw InternalServerException("Failed to register user - Password Hashing Error.")
 
         val newUser = User(
-            username = userCreation.username,
-            email = userCreation.email,
-            password = hashedPassword
+            username = registerRequest.username,
+            email = registerRequest.email,
+            password = hashedPassword,
         )
 
         return userRepository.save(newUser).id
     }
+
     @Transactional
     fun loginUser(loginRequest: LoginRequest): LoginResponse{
         authenticationManager.authenticate(
@@ -77,10 +78,7 @@ class AuthService (
             refreshToken
         )
 
-        val user: User = userRepository.findById(refreshTokenObject.user.id)
-            .orElseThrow {
-                UserNotFoundException("User not found when creating Refresh Token")
-            }
+        val user: User = refreshTokenObject.user
 
         val newAccessToken = jwtService.generateToken(UserSecurity(user))
         val newRefreshToken: String = refreshTokenService.createRefreshToken(user.id)

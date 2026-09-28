@@ -1,0 +1,23 @@
+info:
+  name: Update user Information
+  type: http
+  seq: 8
+
+http:
+  method: PUT
+  url: https://localhost:8443/api/v1/users/information
+  body:
+    type: json
+    data: |-
+      {
+        "username": "Bernardusz",
+        "email": "bernardusz@gmail.com"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

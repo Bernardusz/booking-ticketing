@@ -2,9 +2,13 @@ package io.github.bernardusz.booking_ticketing.shared.exception
 
 import io.github.bernardusz.booking_ticketing.shared.exception.dto.ErrorResponse
 import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.InternalServerException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.InvalidPasswordException
 import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.RefreshTokenException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.UserAlreadyExistsException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.UserNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.AuthenticationException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -103,6 +107,54 @@ class GlobalExceptionHandler {
     ): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             message = ex.message ?: "An unexpected error occurred.",
+            code = ex.code,
+            timestamp = LocalDateTime.now()
+        )
+
+        return ResponseEntity.status(ex.code).body(errorResponse)
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadable(ex: HttpMessageNotReadableException): ResponseEntity<Map<String, String>> {
+        val errorResponse = mapOf(
+            "error" to "BAD_REQUEST",
+            "message" to "Malformed JSON request body or invalid data type"
+        )
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse)
+    }
+
+    @ExceptionHandler(InvalidPasswordException::class)
+    fun handleInvalidPasswordException(
+        ex: InvalidPasswordException
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            message = ex.message ?: "Invalid password",
+            code = ex.code,
+            timestamp = LocalDateTime.now()
+        )
+
+        return ResponseEntity.status(ex.code).body(errorResponse)
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException::class)
+    fun handleUserAlreadyExistsException(
+        ex: UserAlreadyExistsException
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            message = ex.message ?: "User already exists",
+            code = ex.code,
+            timestamp = LocalDateTime.now()
+        )
+
+        return ResponseEntity.status(ex.code).body(errorResponse)
+    }
+
+    @ExceptionHandler(UserNotFoundException::class)
+    fun handleUserNotFoundException(
+        ex: UserNotFoundException
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            message = ex.message ?: "User not found",
             code = ex.code,
             timestamp = LocalDateTime.now()
         )

@@ -2,8 +2,6 @@ package io.github.bernardusz.booking_ticketing.user.dto
 
 import io.github.bernardusz.booking_ticketing.user.Role
 
-data class UserInformationUpdate (
-    val username: String,
-    val email: String,
+data class UserRoleUpdate(
     val role: Role = Role.ROLE_USER,
 )

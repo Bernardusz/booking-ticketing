@@ -1,12 +1,20 @@
 package io.github.bernardusz.booking_ticketing.user
 
+import io.github.bernardusz.booking_ticketing.user.dto.UserInformation
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.proxy.HibernateProxy
+
+enum class Role {
+    ROLE_USER,
+    ROLE_ADMIN
+}
 
 @Entity
 @Table(
@@ -25,6 +33,10 @@ class User(
 
     @Column(nullable = false)
     var password: String,
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    var role: Role = Role.ROLE_USER,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -42,4 +54,11 @@ class User(
     override fun toString(): String {
         return "${this.javaClass.simpleName}(id=$id, username='$username')"
     }
+
+    fun toUserInformation(): UserInformation = UserInformation(
+        id = this.id,
+        username = this.username,
+        email = this.email,
+        role = this.role
+    )
 }

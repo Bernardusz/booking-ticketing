@@ -2,12 +2,16 @@ package io.github.bernardusz.booking_ticketing.auth
 
 import io.github.bernardusz.booking_ticketing.auth.dto.LoginRequest
 import io.github.bernardusz.booking_ticketing.auth.dto.LoginResponse
+import io.github.bernardusz.booking_ticketing.auth.dto.RegisterRequest
 import io.github.bernardusz.booking_ticketing.auth.dto.UserSessionResponse
 import io.github.bernardusz.booking_ticketing.auth.service.RefreshTokenService
 import io.github.bernardusz.booking_ticketing.user.dto.UserCreation
 import io.github.bernardusz.booking_ticketing.user.dto.UserInformation
 import io.github.bernardusz.booking_ticketing.user.dto.UserSecurity
+import io.github.bernardusz.booking_ticketing.shared.util.createAccessTokenCookie
+import io.github.bernardusz.booking_ticketing.shared.util.createRefreshTokenCookie
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
@@ -37,6 +41,8 @@ class AuthController(
         val userInfo = UserInformation(
             id = user.getId(),
             username = user.username,
+            email = user.getEmail(),
+            role = user.getRole(),
         )
 
         return ResponseEntity.ok(
@@ -49,7 +55,7 @@ class AuthController(
 
     @PostMapping("/login")
     fun login(
-        @RequestBody loginRequest: LoginRequest,
+        @Valid @RequestBody loginRequest: LoginRequest,
     ): ResponseEntity<Void> {
         val loginResponse: LoginResponse = authService.loginUser(loginRequest)
 
@@ -74,7 +80,7 @@ class AuthController(
             ?.value
 
         if (refreshToken == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
 
         val loginResponse: LoginResponse = authService.refreshAccessToken(refreshToken)
@@ -117,29 +123,11 @@ class AuthController(
 
     @PostMapping("/register")
     fun register(
-        @RequestBody userCreation: UserCreation,
+        @Valid @RequestBody registerRequest: RegisterRequest,
     ): ResponseEntity<Void> {
-        val userId: Long = authService.registerUser(userCreation)
+        val userId: Long = authService.registerUser(registerRequest)
         return ResponseEntity.created(
             URI.create("/api/v1/users/$userId")
         ).build()
     }
-
-    private fun createAccessTokenCookie(token: String, maxAgeSeconds: Long): ResponseCookie =
-        ResponseCookie.from("AUTH-TOKEN", token)
-            .httpOnly(true)
-            .secure(true)
-            .path("/")
-            .maxAge(maxAgeSeconds)
-            .sameSite("Lax")
-            .build()
-
-    private fun createRefreshTokenCookie(token: String, maxAgeSeconds: Long): ResponseCookie =
-        ResponseCookie.from("REFRESH-TOKEN", token)
-            .httpOnly(true)
-            .secure(true)
-            .path("/api/v1/auth")
-            .maxAge(maxAgeSeconds)
-            .sameSite("Lax")
-            .build()
 }

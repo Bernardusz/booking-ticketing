@@ -1,0 +1,27 @@
+info:
+  name: Update user Role by ID
+  type: http
+  seq: 9
+
+http:
+  method: PUT
+  url: https://localhost:8443/api/v1/users/:id/role
+  params:
+    - name: id
+      value: "2"
+      type: path
+      description: The id of the user whose role want to be changed
+  body:
+    type: json
+    data: |-
+      {
+        "role": "ROLE_USER"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
