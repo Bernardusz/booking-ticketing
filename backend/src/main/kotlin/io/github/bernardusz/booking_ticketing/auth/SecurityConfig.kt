@@ -4,6 +4,7 @@ import io.github.bernardusz.booking_ticketing.auth.filter.JwtAuthenticationFilte
 import io.github.bernardusz.booking_ticketing.auth.service.CustomUserDetailsService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
@@ -42,6 +43,9 @@ class SecurityConfig(
                     "/api/v1/auth/refresh",
                     "/api/v1/auth/me",
                     "/error"
+                ).permitAll()
+                .requestMatchers(
+                    HttpMethod.GET, "/api/v1/movies/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             }

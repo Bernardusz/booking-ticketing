@@ -2,7 +2,7 @@ package io.github.bernardusz.booking_ticketing.auth.service
 
 import io.github.bernardusz.booking_ticketing.auth.AuthRepository
 import io.github.bernardusz.booking_ticketing.auth.RefreshToken
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.RefreshTokenException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.external.RefreshTokenException
 import io.github.bernardusz.booking_ticketing.user.User
 import jakarta.persistence.EntityManager
 import org.springframework.beans.factory.annotation.Value

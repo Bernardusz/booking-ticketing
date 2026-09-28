@@ -1,0 +1,21 @@
+info:
+  name: Delete a Movie by ID
+  type: http
+  seq: 6
+
+http:
+  method: DELETE
+  url: https://localhost:8443/api/v1/movies/:movieId
+  params:
+    - name: movieId
+      value: "1"
+      type: path
+      description: The ID of the movie
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

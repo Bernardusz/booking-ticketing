@@ -5,10 +5,9 @@ import io.github.bernardusz.booking_ticketing.auth.dto.LoginResponse
 import io.github.bernardusz.booking_ticketing.auth.dto.RegisterRequest
 import io.github.bernardusz.booking_ticketing.auth.service.JwtService
 import io.github.bernardusz.booking_ticketing.auth.service.RefreshTokenService
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.InternalServerException
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.UserAlreadyExistsException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.internal.InternalServerException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.existed.UserAlreadyExistsException
 import io.github.bernardusz.booking_ticketing.user.User
-import io.github.bernardusz.booking_ticketing.user.dto.UserCreation
 import io.github.bernardusz.booking_ticketing.user.dto.UserSecurity
 import io.github.bernardusz.booking_ticketing.user.repository.UserRepository
 import org.springframework.security.authentication.AuthenticationManager

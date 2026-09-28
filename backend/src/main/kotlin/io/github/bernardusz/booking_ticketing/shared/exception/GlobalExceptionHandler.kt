@@ -1,11 +1,14 @@
 package io.github.bernardusz.booking_ticketing.shared.exception
 
 import io.github.bernardusz.booking_ticketing.shared.exception.dto.ErrorResponse
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.InternalServerException
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.InvalidPasswordException
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.RefreshTokenException
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.UserAlreadyExistsException
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.UserNotFoundException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.existed.AlreadyExistsException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.internal.InternalServerException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.external.InvalidPasswordException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.external.RefreshTokenException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.existed.UserAlreadyExistsException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.missing.NotFoundException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.missing.UserNotFoundException
+import io.jsonwebtoken.ExpiredJwtException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -136,9 +139,9 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(ex.code).body(errorResponse)
     }
 
-    @ExceptionHandler(UserAlreadyExistsException::class)
-    fun handleUserAlreadyExistsException(
-        ex: UserAlreadyExistsException
+    @ExceptionHandler(AlreadyExistsException::class)
+    fun handleAlreadyExistsException(
+        ex: AlreadyExistsException
     ): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             message = ex.message ?: "User already exists",
@@ -149,9 +152,9 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(ex.code).body(errorResponse)
     }
 
-    @ExceptionHandler(UserNotFoundException::class)
-    fun handleUserNotFoundException(
-        ex: UserNotFoundException
+    @ExceptionHandler(NotFoundException::class)
+    fun handleNotFoundException(
+        ex: NotFoundException
     ): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             message = ex.message ?: "User not found",
@@ -160,5 +163,18 @@ class GlobalExceptionHandler {
         )
 
         return ResponseEntity.status(ex.code).body(errorResponse)
+    }
+
+    @ExceptionHandler(ExpiredJwtException::class)
+    fun handleExpiredJwtException(
+        ex: ExpiredJwtException
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            message = ex.message ?: "Expired token",
+            code = HttpStatus.UNAUTHORIZED.value(),
+            timestamp = LocalDateTime.now()
+        )
+
+        return ResponseEntity.status(errorResponse.code).body(errorResponse)
     }
 }

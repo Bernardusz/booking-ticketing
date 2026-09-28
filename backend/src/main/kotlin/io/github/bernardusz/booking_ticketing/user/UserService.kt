@@ -1,10 +1,10 @@
 package io.github.bernardusz.booking_ticketing.user
 
 import io.github.bernardusz.booking_ticketing.auth.service.RefreshTokenService
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.InternalServerException
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.InvalidPasswordException
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.UserAlreadyExistsException
-import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.UserNotFoundException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.internal.InternalServerException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.external.InvalidPasswordException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.existed.UserAlreadyExistsException
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.missing.UserNotFoundException
 import io.github.bernardusz.booking_ticketing.shared.util.encodeNonNull
 import io.github.bernardusz.booking_ticketing.user.dto.UserCreation
 import io.github.bernardusz.booking_ticketing.user.dto.UserInformation

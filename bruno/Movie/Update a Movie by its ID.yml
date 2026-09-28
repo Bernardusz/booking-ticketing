@@ -1,0 +1,30 @@
+info:
+  name: Update a Movie by its ID
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: https://localhost:8443/api/v1/movies/:movieId
+  params:
+    - name: movieId
+      value: "1"
+      type: path
+      description: The ID of the Movie
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Ode to Joy",
+        "description": "A classical film, about how humanity came together as one.",
+        "releaseDate": "2010-07-16",
+        "durationMinutes": "217"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

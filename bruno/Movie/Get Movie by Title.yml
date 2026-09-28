@@ -1,0 +1,21 @@
+info:
+  name: Get Movie by Title
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: https://localhost:8443/api/v1/movies/title/:title
+  params:
+    - name: title
+      value: Ode to Joy
+      type: path
+      description: The title of the movie
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
