@@ -17,7 +17,8 @@ http:
       {
         "code": "AAA1",
         "name": "Cinema AAA1",
-        "totalSeats": 85
+        "rowsCount": 10,
+        "seatsPerRow": 10
       }
   auth: inherit
 

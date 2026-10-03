@@ -1,17 +1,20 @@
 info:
-  name: Login
+  name: Update a Language
   type: http
-  seq: 3
+  seq: 4
 
 http:
-  method: POST
-  url: https://localhost:8443/api/v1/auth/login
+  method: PUT
+  url: https://localhost:8443/api/v1/languages/:code
+  params:
+    - name: code
+      value: ENG
+      type: path
   body:
     type: json
     data: |-
       {
-        "username": "bernardus@gmail.com",
-        "password": "Bernardus"
+        "title": "English America"
       }
   auth: inherit
 

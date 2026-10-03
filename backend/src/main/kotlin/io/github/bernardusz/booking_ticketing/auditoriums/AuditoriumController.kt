@@ -2,6 +2,8 @@ package io.github.bernardusz.booking_ticketing.auditoriums
 
 import io.github.bernardusz.booking_ticketing.auditoriums.dto.AuditoriumResponse
 import io.github.bernardusz.booking_ticketing.auditoriums.dto.AuditoriumSaveRequest
+import io.github.bernardusz.booking_ticketing.seat.SeatService
+import io.github.bernardusz.booking_ticketing.seat.dto.SeatResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,6 +20,7 @@ import java.net.URI
 @RequestMapping("/api/v1/auditoriums")
 class AuditoriumController(
     val auditoriumService: AuditoriumService,
+    val seatService: SeatService
 ) {
     @PostMapping
     fun create(
@@ -81,5 +84,13 @@ class AuditoriumController(
         )
 
         return ResponseEntity.noContent().build()
+    }
+
+    @GetMapping("/{auditoriumId}/seats")
+    fun getAuditoriumSeats(
+        @PathVariable auditoriumId: Long
+    ): ResponseEntity<List<SeatResponse>> {
+        val seats = seatService.getSeatsByAuditoriumId(auditoriumId)
+        return ResponseEntity.ok(seats)
     }
 }

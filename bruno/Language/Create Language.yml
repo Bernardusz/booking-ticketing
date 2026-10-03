@@ -1,17 +1,17 @@
 info:
-  name: Login
+  name: Create Language
   type: http
-  seq: 3
+  seq: 1
 
 http:
   method: POST
-  url: https://localhost:8443/api/v1/auth/login
+  url: https://localhost:8443/api/v1/languages
   body:
     type: json
     data: |-
       {
-        "username": "bernardus@gmail.com",
-        "password": "Bernardus"
+        "code": "ENG-A",
+        "title": "American English"
       }
   auth: inherit
 

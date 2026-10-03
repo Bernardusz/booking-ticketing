@@ -1,0 +1,30 @@
+info:
+  name: Update a Showing
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: https://localhost:8443/api/v1/showings/:showingId
+  params:
+    - name: showingId
+      value: "2"
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "movieId": 1,
+        "startTime": "2026-10-03T19:32:00Z",
+        "languageCode": "ENG-A",
+        "price": 12.50,
+        "auditoriumId": 3
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

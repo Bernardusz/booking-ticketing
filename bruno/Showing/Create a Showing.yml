@@ -1,19 +1,20 @@
 info:
-  name: Create a new Auditorium
+  name: Create a Showing
   type: http
   seq: 1
 
 http:
   method: POST
-  url: https://localhost:8443/api/v1/auditoriums
+  url: https://localhost:8443/api/v1/showings
   body:
     type: json
     data: |-
       {
-        "code": "BBB1",
-        "name": "Cinema BBB1",
-        "rowsCount": 9,
-        "seatsPerRow": 10
+        "movieId": 1,
+        "startTime": "2026-10-03T14:30:00Z",
+        "languageCode": "ENG-A",
+        "price": 12.50,
+        "auditoriumId": 3
       }
   auth: inherit
 

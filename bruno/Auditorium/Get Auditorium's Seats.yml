@@ -1,16 +1,15 @@
 info:
-  name: Get all Auditoriums
+  name: Get Auditorium's Seats
   type: http
-  seq: 2
+  seq: 6
 
 http:
   method: GET
-  url: https://localhost:8443/api/v1/auditoriums
+  url: https://localhost:8443/api/v1/auditoriums/:auditoriumId/seats
   params:
-    - name: identifier
-      value: B
-      type: query
-      disabled: true
+    - name: auditoriumId
+      value: "3"
+      type: path
   auth: inherit
 
 settings:

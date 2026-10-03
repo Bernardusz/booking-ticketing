@@ -2,7 +2,7 @@ package io.github.bernardusz.booking_ticketing.shared.exception.exceptions.missi
 
 import org.springframework.http.HttpStatus
 
-class AuditoriumNotFound(
+class ShowingNotFoundException(
     message: String,
     code: Int = HttpStatus.NOT_FOUND.value(),
 ) : NotFoundException(message, code)

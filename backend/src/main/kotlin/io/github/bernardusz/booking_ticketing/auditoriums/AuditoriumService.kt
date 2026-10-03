@@ -3,6 +3,8 @@ package io.github.bernardusz.booking_ticketing.auditoriums
 import io.github.bernardusz.booking_ticketing.auditoriums.dto.AuditoriumResponse
 import io.github.bernardusz.booking_ticketing.auditoriums.dto.AuditoriumSaveRequest
 import io.github.bernardusz.booking_ticketing.auditoriums.dto.toResponse
+import io.github.bernardusz.booking_ticketing.seat.Seat
+import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.existed.AuditoriumAlreadyExistException
 import io.github.bernardusz.booking_ticketing.shared.exception.exceptions.missing.AuditoriumNotFound
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -13,15 +15,40 @@ class AuditoriumService(
 ) {
     @Transactional
     fun createAuditorium(
-        auditorium: AuditoriumSaveRequest
+        request: AuditoriumSaveRequest
     ): Long {
-        val newAuditorium = Auditorium(
-            name = auditorium.name,
-            code = auditorium.code,
-            totalSeats = auditorium.totalSeats
+        val cleanCode = request.code.uppercase().trim()
+
+        if (auditoriumRepository.existsByCode(cleanCode)) {
+            throw AuditoriumAlreadyExistException(
+                "Auditorium already exists with code $cleanCode"
+            )
+        }
+        val auditorium = Auditorium(
+            name = request.name,
+            code = request.code,
+            totalSeats = request.totalSeats
         )
 
-        return auditoriumRepository.save(newAuditorium).id
+        val generatedSeats = mutableListOf<Seat>()
+        for (rowIndex in 0 until request.rowsCount) {
+            val rowLabel = ('A' + rowIndex).toString() // Generates 'A', 'B', 'C', etc.
+            for (seatNum in 1..request.seatsPerRow) {
+                generatedSeats.add(
+                    Seat(
+                        rowLabel = rowLabel,
+                        seatNumber = seatNum,
+                        auditorium = auditorium
+                    )
+                )
+            }
+        }
+
+        auditorium.seats = generatedSeats
+
+        val savedAuditorium = auditoriumRepository.save(auditorium)
+
+        return savedAuditorium.id
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +75,6 @@ class AuditoriumService(
             .orElseThrow {
                 AuditoriumNotFound(
                     "Auditorium with id $id not found",
-                    404
                 )
             }.toResponse()
     }
@@ -62,7 +88,6 @@ class AuditoriumService(
             .orElseThrow {
                 AuditoriumNotFound(
                     "Auditorium with id $id not found",
-                    404
                 )
             }
 
@@ -78,7 +103,6 @@ class AuditoriumService(
         if (!auditoriumRepository.existsById(id)){
             throw AuditoriumNotFound(
                 "Auditorium with id $id not found",
-                404
             )
         }
         auditoriumRepository.deleteById(id)

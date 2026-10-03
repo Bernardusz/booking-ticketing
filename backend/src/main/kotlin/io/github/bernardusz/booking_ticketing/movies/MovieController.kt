@@ -26,7 +26,7 @@ class MovieController(
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     fun createMovie(@RequestBody movie: MovieSaveRequest)
-        : ResponseEntity<Movie> {
+        : ResponseEntity<Void> {
         val movieId: Long = movieService.createMovie(movie)
         return ResponseEntity.created(
             URI.create("/api/v1/movies/$movieId")

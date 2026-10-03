@@ -1,0 +1,20 @@
+info:
+  name: Delete a Language
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: https://localhost:8443/api/v1/languages/:code
+  params:
+    - name: code
+      value: ENG
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
